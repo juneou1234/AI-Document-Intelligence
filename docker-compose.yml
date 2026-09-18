@@ -1,0 +1,22 @@
+services:
+
+  ai-document-intelligence:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    image: ai-document-intelligence:latest
+
+    container_name: ai-document-intelligence
+
+    ports:
+      - "8501:8501"
+
+    env_file:
+      - .env
+
+    volumes:
+      - ./documents:/app/documents
+      - ./indexes:/app/indexes
+
+    restart: unless-stopped
