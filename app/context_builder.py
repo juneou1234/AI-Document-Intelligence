@@ -47,7 +47,8 @@ def _clean_context_text(text):
 
 def _format_result(
     result,
-    text_override=None
+    text_override=None,
+    source_number=None
 ):
     """Format one retrieval result for the LLM."""
 
@@ -64,7 +65,16 @@ def _format_result(
         text
     )
 
+    header = ""
+
+    if source_number is not None:
+
+        header = (
+            f"Source [{source_number}]\n"
+        )
+
     return (
+        f"{header}"
         f"Section: {result.get('section')}\n"
         f"Topic: {result.get('topic')}\n"
         f"Question: {result.get('question')}\n"
@@ -479,7 +489,8 @@ def build_context(
 
         empty_formatted = _format_result(
             result,
-            text_override=""
+            text_override="",
+            source_number=index + 1
         )
 
         formatting_overhead = len(
@@ -505,7 +516,8 @@ def build_context(
 
         block = _format_result(
             result,
-            text_override=text
+            text_override=text,
+            source_number=index + 1
         )
 
         if not block:
@@ -548,7 +560,8 @@ def build_context(
 
             block = _format_result(
                 result,
-                text_override=text
+                text_override=text,
+                source_number=index + 1
             )
 
         if not block:

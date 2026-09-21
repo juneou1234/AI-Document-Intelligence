@@ -178,6 +178,52 @@ def save_index(
 
 
 # =========================================================
+# LOAD METADATA
+# =========================================================
+
+def load_metadata(
+    document_id
+):
+    """
+    Load only the metadata for one document index.
+
+    This is faster than load_index() because it does
+    not read embeddings.
+    """
+
+    path = get_metadata_path(
+        document_id
+    )
+
+    if not os.path.exists(
+        path
+    ):
+
+        raise FileNotFoundError(
+            f"Index file not found: {path}"
+        )
+
+    with open(
+        path,
+        "r",
+        encoding="utf-8"
+    ) as file:
+
+        metadata = json.load(
+            file
+        )
+
+    metadata = metadata.copy()
+
+    metadata.setdefault(
+        "document_id",
+        document_id
+    )
+
+    return metadata
+
+
+# =========================================================
 # LOAD INDEX
 # =========================================================
 
@@ -333,14 +379,7 @@ def list_indexed_documents():
 
         try:
 
-            _, _, metadata = load_index(
-                document_id
-            )
-
-            metadata = metadata.copy()
-
-            metadata.setdefault(
-                "document_id",
+            metadata = load_metadata(
                 document_id
             )
 
